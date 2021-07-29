@@ -1,0 +1,132 @@
+<p>
+  <mat-toolbar color="primary">
+    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+      <mat-icon>air</mat-icon>
+    </button>
+    <span>Pronosticador de clima intergaláctico</span>
+    <span class="example-spacer"></span>
+    <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+      <mat-icon>brightness_4</mat-icon>
+    </button>
+  </mat-toolbar>
+</p>
+
+<mat-card class="tarjetas">
+  <mat-card-header>
+    <mat-card-title>Años a calcular:</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div style="display: flex;">
+      <mat-form-field appearance="fill">
+        <mat-select [(ngModel)]="anio" required>
+          <mat-option *ngFor="let anio of listaAnios" [value]="anio.valor">
+            {{anio.muestraValor}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div class="example-button-row">
+        <div class="example-flex-container">
+          <div class="example-button-container">
+            <button mat-fab color="primary" aria-label="Example icon button with a delete icon"
+              (click)="calcularClima()">
+              <mat-icon>search</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="tarjetas" *ngIf="listaResponseResumenClima !== undefined">
+  <mat-card-header>
+    <mat-card-title>Calculos por año:</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="example-action-buttons">
+      <button mat-button (click)="accordion.openAll()">Abrir todos</button>
+      <button mat-button (click)="accordion.closeAll()">Cerrar todos</button>
+    </div>
+    <mat-accordion class="example-headers-align" multi>
+      <mat-expansion-panel *ngFor="let resumenCivilizacion of listaResponseResumenClima">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{resumenCivilizacion.civilizacion.nombreCivilizacion}}
+          </mat-panel-title>
+          <mat-panel-description>
+            velocidad de desplazamiento: {{resumenCivilizacion.civilizacion.gradosPorDia}} grados/dia
+            <mat-icon>travel_explore</mat-icon>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <mat-card class="tarjetas">
+          <mat-card-header>
+            <mat-card-title>Resumen climático:</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <mat-grid-list cols="3" rowHeight="4:1">
+              <mat-grid-tile>
+                <mat-icon>brightness_5</mat-icon> Sequias totales: {{resumenCivilizacion.periodosSequiaTotal}}
+              </mat-grid-tile>
+              <mat-grid-tile>
+                <mat-icon>water_drop</mat-icon> Lluvias totales: {{resumenCivilizacion.periodosLluviaTotal}}
+              </mat-grid-tile>
+              <mat-grid-tile>
+                <mat-icon>thumb_up_alt</mat-icon> Periodos Óptimos totales: {{resumenCivilizacion.periodosOptimosTotal}}
+              </mat-grid-tile>
+            </mat-grid-list>
+          </mat-card-content>
+        </mat-card>
+
+        <h3>Detalles:</h3>
+        <table mat-table [dataSource]="resumenCivilizacion.listaResumenAnual" class="mat-elevation-z8">
+
+          <!-- Año -->
+          <ng-container matColumnDef="Año">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-icon>calendar_today</mat-icon> Año
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.anio}} </td>
+          </ng-container>
+
+          <!-- Periodos Sequia -->
+          <ng-container matColumnDef="Periodos Sequia">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-icon>brightness_5</mat-icon> Periodos Sequia
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.periodosSequia}} </td>
+          </ng-container>
+
+          <!-- Periodos LLuvia -->
+          <ng-container matColumnDef="Periodos LLuvia">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-icon>water_drop</mat-icon> Periodos LLuvia
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.periodosLLuvia}} </td>
+          </ng-container>
+
+          <!-- Pico de lluvia por año -->
+          <ng-container matColumnDef="Pico de lluvia por año">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-icon>bolt</mat-icon> Días con el pico de lluvia más alto
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.picoMaximoLluvia}} </td>
+          </ng-container>
+
+          <!-- Periodos condición óptima -->
+          <ng-container matColumnDef="Periodos condición óptima">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-icon>thumb_up_alt</mat-icon> Periodos condición óptima
+            </th>
+            <td mat-cell *matCellDef="let element"> {{element.periodosCondicionOptima}} </td>
+          </ng-container>
+
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </mat-expansion-panel>
+
+    </mat-accordion>
+  </mat-card-content>
+</mat-card>
